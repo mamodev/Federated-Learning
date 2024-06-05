@@ -20,7 +20,7 @@ for i in range(2, len(sys.argv)):
     numbers.append(int(sys.argv[i]))
 numbers = list(dict.fromkeys(numbers))
 
-print(f"Starting client {clientName} with numbers {numbers}...")
+print(f"Bias: {numbers}...")
 
 store = MemoryStore()
 store.store("group_token", "GROUP_TOKEN")

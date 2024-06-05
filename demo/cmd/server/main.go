@@ -166,7 +166,7 @@ func main() {
 	clients := <-FindClientPoll(registry, ctx, numClients)
 
 	if len(clients) != 0 {
-		fmt.Println("Found", clients)
+		fmt.Println("Clients founded, starting training")
 
 		var round int = 0
 		var prevAccuracy float64 = -1
@@ -204,11 +204,21 @@ func main() {
 				if err != nil {
 					return err
 				}
-				
+
+				if round == 0 {
+					prevAccuracy = body.Accuracy
+				}
+
 				accIncrementPrc := (body.Accuracy - prevAccuracy) / prevAccuracy * 100		
 				prevAccuracy = body.Accuracy
 
-				fmt.Printf("{Round: %d} Accuracy: %f, Increment: %f, Loss: %f\n", round, body.Accuracy, accIncrementPrc, body.Loss)
+
+				sign := "+"
+				if accIncrementPrc < 0 {
+					sign = ""
+				}
+
+				fmt.Printf("[R-%d] Acc: %.2f (%s%.2f), Loss: %.2f\n", round, body.Accuracy, sign, accIncrementPrc, body.Loss)
 
 				if round != 0 {
 					os.Remove("./model/init.npz")

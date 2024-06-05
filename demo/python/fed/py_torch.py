@@ -38,11 +38,10 @@ class PyTorchModel(FedModel):
     self.net.load_state_dict(netParams)
     train_data = self.train_loader()
     
-    print("Starting training...")
     self.net.train()
     epochs = parameters["epochs"] if "epochs" in parameters else 3
     for e in range(epochs):
-      print("Epoch", e + 1)
+      print("  [Train] Epoch", e + 1)
       for batch_idx, (data, target) in enumerate(train_data):
         self.optimizer.zero_grad()
         output = self.net(data)
@@ -78,7 +77,5 @@ class PyTorchModel(FedModel):
       "loss": test_loss,
       "accuracy": correct / total * 100
     } 
-
-    print("Evaluation result:", res)
 
     return res

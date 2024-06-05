@@ -120,7 +120,7 @@ func registerSubscriber (reg Registry) http.HandlerFunc {
 			return
 		}
 
-		fmt.Println("Registered: ", token, " in group: ", group, " with params: ", body.Params)
+		fmt.Println("Registered: ", token)
 
 
 		resp := Json{"token": token}

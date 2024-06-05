@@ -4,6 +4,14 @@ import time
 from fed.model import Task, Protocols
 from fed.client import FedClient
 
+RED = "\033[31m"
+GREEN = "\033[32m"
+YELLOW = "\033[33m"
+BLUE = "\033[34m"
+MAGENTA = "\033[35m"
+CYAN = "\033[36m"
+RESET = "\033[0m"
+
 class HttpFedClient(FedClient):
   def __init__(self, url, store, model, params):
     self.url = url
@@ -50,7 +58,6 @@ class HttpFedClient(FedClient):
 
   def subscribe(self):
     self._initialize()
-    print("Subscribing...")
    
     body = {
       "tasks": [
@@ -72,26 +79,27 @@ class HttpFedClient(FedClient):
       raise Exception(err_str)
 
     self.subscribed = True
-    print("Subscribed")
+    print("[Subscribed to registry]")
 
     # loop until not subscribed
     while self.subscribed:
-      print("Checking for tasks...")
       response = requests.get(f"{self.url}/task", headers={"Group": self.group_key, "Authorization": self.client_token})
       if response.status_code != 200:
         time.sleep(1)
         continue  
-
-      task = response.json()
-      print(f"Received task: {task}")
-      coordinatorUrl = f"http://{task['host']}:{task['port']}/task/{task['token']}"
       
+      task = response.json()
+      print(f"[Task {task['type']}, {MAGENTA}starting{RESET}]")
+      coordinatorUrl = f"http://{task['host']}:{task['port']}/task/{task['token']}"
+
+      startTime = time.time()
+
       response = requests.get(coordinatorUrl, headers={"Authorization": self.client_token})
       if response.status_code != 200:
-        print("Failed to get task params", response.status_code, response.text)
-        print(self.client_token)
+        print("\tFailed to get task params", response.status_code, response.text)
         continue
-
+      
+      print(f"  [{GREEN}GET{RESET}] task params")
 
       task_type = task['type']
       payload = response.content
@@ -102,24 +110,18 @@ class HttpFedClient(FedClient):
         self._evaluate(task, payload)
       else:
         print("Unknown task type: ", task_type)
+      
+      print(f"[Task {task['type']} {GREEN}completed{RESET} in {int(time.time() - startTime + 1000)}ms]")
     
   
   def _train(self, task, payload):
     coordinatorUrl = f"http://{task['host']}:{task['port']}/task/{task['token']}"
-
-    print(" ==== Training model ====")
     newModel = self.model.train(payload, {})
-    print(" ==== Model Trained ====")
-
     requests.post(coordinatorUrl, headers={"Authorization": self.client_token, "Content-Type": "application/octet-stream"}, data=newModel)
 
   def _evaluate(self, task, payload):
     coordinatorUrl = f"http://{task['host']}:{task['port']}/task/{task['token']}"
-
-    print(" ==== Evaluating model ====")
     evaldata = self.model.evaluate(payload, {})
-    print(" ==== Model Evaluated ====")
-
     requests.post(coordinatorUrl, headers={"Authorization": self.client_token, "Content-Type": "application/octet-stream"}, json=evaldata)
 
 

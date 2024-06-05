@@ -24,8 +24,7 @@ tmux set pane-border-status top
 tmux set pane-border-format "[#T]"
 
 tmux select-pane -T "Server"
-tmux send-keys "./server $clients" C-m
-
+tmux send-keys "./bin/server $clients" C-m
 
 
 tmux split-window 
@@ -46,7 +45,17 @@ do
   tmux send-keys "cd python" C-m
   tmux send-keys "source .venv/bin/activate" C-m
   tmux send-keys "clear" C-m
-  tmux send-keys "python main.py $panel_id 1 2 3 4 5 6 7 8 9" C-m
+  # Unbiased
+    # tmux send-keys "python main.py $panel_id 1 2 3 4 5 6 7 8 9" C-m
+  
+  # Biased
+      if [ $panel_id -gt 9 ]; then
+          param="1 2 3 4 5 6 7 8 9"
+      else
+          param=$panel_id
+      fi
+
+      tmux send-keys "python main.py $panel_id $param" C-m
 
   tmux select-layout tile
 done
