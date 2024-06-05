@@ -14,3 +14,7 @@ Steps:
 2. Make bin dir: mkdir bin
 3. Build server: go build -o ./bin ./cmd/server/
 4. Run simulation: ./simulation.sh
+
+---
+
+![](demo.gif)
