@@ -20,11 +20,22 @@ Steps:
 ![](demo.gif)
 
 The server (panel 0:0) is responsable for coordination of N clients. It spawns 2 Task:
-- 1) EVAL_TASK for only the oracle (machine wich have a complete dataset wich can give a "real" evautation.
-- 2) TRAIN_TASK foreach client substcribed to registry.
 
-Training process: 
+- 1. EVAL_TASK for only the oracle (machine wich have a complete dataset wich can give a "real" evautation.
+- 2. TRAIN_TASK foreach client substcribed to registry.
+
+Training process:
 Loop:
-  1. Send Task to N clients (With latest model)
-  2. Recive & Aggregate 
-  3. Evaluate result
+
+1. Send Task to N clients (With latest model)
+2. Recive & Aggregate
+3. Evaluate result
+
+## References:
+
+- [Experimenting with Emerging RISC-V Systems for Decentralised
+  Machine Learning](https://arxiv.org/pdf/2302.07946)
+- [Architectural patterns for the design of federated learning systems](https://www.sciencedirect.com/science/article/pii/S0164121222000899)
+- [Flower](https://flower.ai/docs/framework/)
+- [Federated Scope](https://federatedscope.io/docs/documentation/)
+- [FedML: the paper](https://arxiv.org/pdf/2007.13518)
