@@ -18,3 +18,13 @@ Steps:
 ---
 
 ![](demo.gif)
+
+The server (panel 0:0) is responsable for coordination of N clients. It spawns 2 Task:
+- 1) EVAL_TASK for only the oracle (machine wich have a complete dataset wich can give a "real" evautation.
+- 2) TRAIN_TASK foreach client substcribed to registry.
+
+Training process: 
+Loop:
+  1. Send Task to N clients (With latest model)
+  2. Recive & Aggregate 
+  3. Evaluate result
