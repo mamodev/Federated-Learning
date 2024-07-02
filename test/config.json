@@ -1,0 +1,35 @@
+{
+  "name": "Test 1",
+  "n_clients": 1,
+  "rounds": 2,
+  "dataset": {
+    "name": "MNIST",
+    "epochs": 1,
+    "batch_size": 256,
+    "learning_rate": 0.01,
+    "momentum": 0.9,
+    "indices": {
+      "0": {
+        "0": [0, 5923],
+        "1": [0, 6742],
+        "2": [0, 5958],
+        "3": [0, 6131],
+        "4": [0, 5842],
+        "5": [0, 5421],
+        "6": [0, 5918],
+        "7": [0, 6265],
+        "8": [0, 5851],
+        "9": [0, 5949]
+      }
+    },
+    "shuffle": true,
+    "network": "SimpleCNN"
+  },
+  "timeline": [
+    [["RETR", 0]],
+    [
+      ["COMM", 0],
+      ["AGG", -1]
+    ]
+  ]
+}

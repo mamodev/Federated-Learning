@@ -74,42 +74,27 @@ func (dict NpyDict) ToBytes(offset int) []byte {
 	return append(rawDict, endBuff...)
 }
 
+
+type ZipReader struct {
+	OnClose func() error
+	*zip.Reader
+}
+
+func (z *ZipReader) Close() error  {
+	if z.OnClose != nil {
+		return z.OnClose()
+	}
+
+	return nil
+}
+
+
 type NpzDict struct {
 	Arrays map[string]NpyArray
-	Path string
+	// Path string
+	GetZipReader func() (*ZipReader, error)
 }
 
-func LoadNpz(path string) (*NpzDict, error) {
-	npzReader, err := zip.OpenReader(path)
-	if err != nil {
-		return nil, err
-	}
-
-	defer npzReader.Close()
-
-	npzDict := NpzDict{
-		Arrays: make(map[string]NpyArray),
-		Path: path,
-	}
-
-	for _, file := range npzReader.File {
-		reader, err := file.Open()
-		if err != nil {
-			return nil, err
-		}
-
-		r, err := NewNpyArrayReader(reader)
-		if err != nil {
-			reader.Close()
-			return nil, fmt.Errorf("error creating NpyArrayReader, %v", err)
-		}
-
-		npzDict.Arrays[file.Name] =  r.Array
-		r.Close()	
-	}
-
-	return &npzDict, nil
-}
 
 func (npzDict *NpzDict) GetArrayReader (key string) (*NpyArrayReader, error) {
 	_, ok := npzDict.Arrays[key]
@@ -117,7 +102,7 @@ func (npzDict *NpzDict) GetArrayReader (key string) (*NpyArrayReader, error) {
 		return nil, fmt.Errorf("key not found")
 	}
 
-	preader, err := zip.OpenReader(npzDict.Path)
+	preader, err := npzDict.GetZipReader()
 	if err != nil {
 		return nil, fmt.Errorf("error opening .npz file %v", err)
 	}
