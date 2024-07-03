@@ -151,6 +151,8 @@ class UniversalModel:
 
         net = self.network
         optimizer = optim.SGD(net.parameters(), lr=self.params['learning_rate'], momentum=self.params['momentum'])
+        # optimizer = optim.Adam(net.parameters(), lr=self.params['learning_rate'])
+
 
         net.train()
         if weights is not None:
@@ -160,7 +162,7 @@ class UniversalModel:
         loss_function = nn.CrossEntropyLoss().to(self.device)
 
         for i in range(self.params['epochs']):
-          print("Epoch " + str(i))
+          # print("Epoch " + str(i))
           # for data, target in self.train_loader:
           for i, (data, target) in enumerate(self.train_loader):
               data = data.to(self.device)
@@ -222,7 +224,7 @@ class UniversalModel:
 
         if 'indices' not in self.params:
           self.train_dataset = train_dataset
-          self.train_loader = data.DataLoader(train_dataset, batch_size=self.params['batch_size'], shuffle=self.params['shuffle'])
+          self.train_loader = data.DataLoader(train_dataset, batch_size=self.params['batch_size'], shuffle=self.params['shuffle'], num_workers=4, pin_memory=True)
           return
         
         class_subs = {}

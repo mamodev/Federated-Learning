@@ -65,6 +65,15 @@ function App() {
         test.timeline = {};
       }
 
+      if (oldData.rounds < test.rounds) {
+        const keys = Object.keys(test.timeline).map((k) => parseInt(k));
+        for (const k of keys) {
+          if (k >= test.rounds) {
+            delete test.timeline[k];
+          }
+        }
+      }
+
       return old.map((t, i) => (i == idx ? test : t));
     });
   };

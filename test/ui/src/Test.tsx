@@ -32,6 +32,18 @@ export function TestComponent(props: TestComponentProps) {
     navigator.clipboard.writeText(JSON.stringify(toConfig(test)));
   };
 
+  const handleDuplicateTimeline = () => {
+    const timeline = test.timeline;
+    const rounds = test.rounds;
+
+    for (let i = 0; i < rounds; i++) {
+      const newPos = rounds + i;
+      timeline[newPos] = JSON.parse(JSON.stringify(timeline[i]));
+    }
+
+    onChange({ ...test, timeline: timeline, rounds: rounds * 2 });
+  };
+
   return (
     <Stack spacing={1}>
       <Stack direction="row" spacing={2} alignItems="center">
@@ -73,6 +85,13 @@ export function TestComponent(props: TestComponentProps) {
           Copy Config
         </Button>
         <SimulationButton config={test} />
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={handleDuplicateTimeline}
+        >
+          Duplicate Timeline
+        </Button>
       </Stack>
 
       <DatasetCmp
