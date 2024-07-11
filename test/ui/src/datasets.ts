@@ -1,3 +1,5 @@
+import { DistributionFunctionName, LoadingFunctionName } from "./distribution";
+
 export class Dataset {
   name: string;
   classes: [number, number][];
@@ -5,6 +7,10 @@ export class Dataset {
   constructor(name: string, classes: [number, number][]) {
     this.name = name;
     this.classes = classes;
+  }
+
+  getNumClasses(): number {
+    return this.classes.length;
   }
 
   getDefaultIndices(n_clients: number): DSClientsIndices {
@@ -80,7 +86,7 @@ type DsIndex = {
   [key: number]: [number, number];
 };
 
-type DSClientsIndices = {
+export type DSClientsIndices = {
   [key: number]: DsIndex;
 };
 
@@ -93,6 +99,12 @@ export interface DatasetConfig {
   learning_rate: number;
   momentum: number;
   shuffle: boolean;
-  indices: DSClientsIndices;
   network: string;
+
+  indices: DSClientsIndices;
+  knolwedge_amount: number;
+  bias: number;
+  loading_fn: LoadingFunctionName;
+  distribution_fn: DistributionFunctionName;
+  distribution_base: number;
 }

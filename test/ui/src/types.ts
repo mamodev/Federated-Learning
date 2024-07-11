@@ -16,5 +16,10 @@ export interface TestData {
   dataset: DatasetConfig;
   n_clients: number;
   rounds: number;
-  timeline: Timeline;
+
+  timelines: {
+    name: string;
+    timeline: Timeline;
+    rounds: number;
+  }[];
 }
