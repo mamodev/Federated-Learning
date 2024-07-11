@@ -1,6 +1,5 @@
 import React from "react";
 import { TestData } from "./types";
-import { toConfig } from "./config";
 import { Button } from "@mui/material";
 
 interface SimulationButtonProps {
@@ -19,23 +18,23 @@ export function SimulationButton(props: SimulationButtonProps) {
   const handleRun = () => {
     setState("queued");
     nameRef.current = config.name;
-    fetch("http://localhost:8080/run", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(toConfig(config)),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to run simulation");
-        }
-        setState("running");
-      })
-      .catch((error) => {
-        console.error(error);
-        setState("idle");
-      });
+    // fetch("http://localhost:8080/run", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(toConfig(config)),
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw new Error("Failed to run simulation");
+    //     }
+    //     setState("running");
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //     setState("idle");
+    //   });
   };
 
   // post run status /info

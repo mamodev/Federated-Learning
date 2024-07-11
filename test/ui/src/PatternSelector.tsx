@@ -81,7 +81,7 @@ export function PatternSelector(props: PatternSelectorProps) {
         size="small"
         options={Patterns}
         getOptionLabel={(option) => option.name}
-        onChange={(e, value) => setSelectedPattern(value)}
+        onChange={(_, value) => setSelectedPattern(value)}
         renderInput={(params) => (
           <TextField {...params} label="Select pattern" />
         )}
